@@ -1,1 +1,1 @@
-# localization-fingerprint
+# Localization by using the fingerprint approach
