@@ -15,7 +15,7 @@ if __name__ == "__main__":
     if os.path.isdir(out_dir) == False:  # 만약, 디렉토리가 존재하지 않으면
         os.mkdir(out_dir)
 
-    out_filename_base = 'client-measure-' + x_coord + '-' + y_coord
+    out_filename_base = out_dir + '/' + 'client-measure-' + x_coord + '-' + y_coord
     wifi_dev_name = 'wlan0'
     scan_cmd_base =  "sudo iwlist " + wifi_dev_name + " scan | grep -E 'level|Address' | sed 's/level=//' | awk '{ if ( $1 == \"Cell\" ) { print $5 } if ( $2 == \"Signal\" ) { print $3 } }'"
 
