@@ -20,9 +20,10 @@ if __name__ == "__main__":
     wifi_dev_name = 'wlan0'
     scan_cmd_base =  "sudo iwlist " + wifi_dev_name + " scan | grep -E 'level|Address' | sed 's/level=//' | awk '{ if ( $1 == \"Cell\" ) { print $5 } if ( $2 == \"Signal\" ) { print $3 } }'"
 
-    for i in range(n_repeat):
+    for i in range(n_repeat+1):
         out_filename_now = out_filename_base + '-' + str(i)
         scan_cmd_now = scan_cmd_base + ' > ' + out_filename_now
+        print('Working: ', out_filename_now)
         os.system(scan_cmd_now)
         time.sleep(1)  # sleep 하는 것이 안정성 면에서 좋다.
 
