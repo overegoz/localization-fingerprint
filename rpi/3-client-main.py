@@ -47,7 +47,7 @@ if __name__ == "__main__":
             cli_socket.sendall(bytes(msg2send, "utf-8"))
             
             # 1초간 대기
-            time.sleep(common.sleep_sec)  # sleep 하는 것이 안정성 면에서 좋다.
+            time.sleep(common.sleep_sec+1)  # sleep 하는 것이 안정성 면에서 좋다.
             tx_counter += 1
 
     except:  # 클라이언트에서 ctrl+c로 종료하도록 하고, 이때 소켓을 닫도록 코딩함.
