@@ -8,6 +8,8 @@
 
 2. Server : ./python receive-setup.py 실행
   - RPi 클라이언트가 보내주는 radio measurement 파일 수신하기
+    - USE_INTERNET_CONN=True 이면 실제로 클라이언트로 부터 전송 받은 데이터로 radio map 만들고
+    - False 이면, 서버 로컬에 저장된 데이터를 이용해서 radio map 만든다
   - 수신한 파일을 parsing 해서 radio-map 생성하기
   - 생성한 radio-map을 파일로 dump 하기
 
