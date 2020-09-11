@@ -12,6 +12,6 @@ radio_map_filename = 'radio-map.pickle'
 ap_name_filename = 'ap-name.pickle'
 delimiter = '-'
 space_delimiter = ' '
-sleep_sec=1
+sleep_sec = 1
 
 # THE END

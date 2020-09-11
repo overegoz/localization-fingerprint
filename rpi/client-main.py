@@ -1,7 +1,8 @@
 import sys
 import os
 import time
-import client_utils
+from client_utils import get_msg2send
+import socket
 
 if __name__ == "__main__":
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
    
     # 클라이언트 소켓 생성   
     cli_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print('Connecting to...', common.server_ip, server_port)
+    print('Connecting to...', common.server_ip, common.server_port)
 
     # 서버에 연결 시도
     try:
@@ -36,14 +37,20 @@ if __name__ == "__main__":
             out_filename_now = out_filename_base + common.delimiter + str(tx_counter) + '.txt'
             scan_cmd_now = scan_cmd_base + ' > ' + out_filename_now
             os.system(scan_cmd_now)
+            time.sleep(common.sleep_sec)
+            #print('Scanning APs...done')
     
             # 저장한 파일을 읽어서, 메시지로 변환 후 서버로 전송
+            #print('Prepping msg to send to server...')
             msg2send = get_msg2send(out_filename_now)
+            print('send msg : ', msg2send)
             cli_socket.sendall(bytes(msg2send, "utf-8"))
             
             # 1초간 대기
             time.sleep(common.sleep_sec)  # sleep 하는 것이 안정성 면에서 좋다.
+            tx_counter += 1
 
     except:  # 클라이언트에서 ctrl+c로 종료하도록 하고, 이때 소켓을 닫도록 코딩함.
         cli_socket.close()
+        print('Terminating client...done\nBye~')
 
