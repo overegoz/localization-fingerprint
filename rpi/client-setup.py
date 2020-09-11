@@ -28,6 +28,6 @@ if __name__ == "__main__":
         scan_cmd_now = scan_cmd_base + ' > ' + out_filename_now
         print('Working: ', out_filename_now)
         os.system(scan_cmd_now)
-        time.sleep(1)  # sleep 하는 것이 안정성 면에서 좋다.
+        time.sleep(common.sleep_sec)  # sleep 하는 것이 안정성 면에서 좋다.
 
     print('Client : RSS measure... done')
