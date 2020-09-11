@@ -125,3 +125,29 @@ def get_max_xy(dir_name):
     assert max_y >= 0
 
     return max_x, max_y 
+
+#how_many = 1  # 가장 가까운 셀 블록 몇개를 찾을지?
+def find_closest_cell_blocks(client_radio_map, radio_map, how_many):
+    max_y, max_x = len(radio_map)-1, len(radio_map[0])-1
+
+    # 검색을 빠르게 하기 위해 아래와 같이 추가로 3개의 list를 더 사용
+    coord = []
+    dist = []
+
+    for y in range(max_y+1):
+        for x in range(max_x+1):
+            coord.append([y,x])
+            d = np.linalg.norm(np.array(radio_map) - np.array(client_radio_map[y][x]))
+            dist.append(d)
+
+    # 결과 저장
+    cell_blocks, distances = [], []
+    for iter in range(how_many):
+        min_dist = min(dist)  # 최단거리 값 구하기
+        min_dist_index = distances.index(min_dist)  # 최단거리가 어느 인덱스에 저장되어 있는지?
+        cell_blocks.append(coord[min_dist_index])  # 해당 인덱스의 좌표값 가져오기
+        distances.append(dist[min_dist_index])  # 해당 인덱스와의 거리값 가져오기
+        # 큰 값으로 바꿔놓으면, 다음 iteration에서는 두번째로 작은 거리값을 찾을 수 있지
+        distances[min_dist_index] = sys.maxsize  
+
+    return cell_blocks, distances
