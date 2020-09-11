@@ -11,5 +11,6 @@ dir_name = 'measure-1'
 radio_map_filename = 'radio-map.pickle'
 ap_name_filename = 'ap-name.pickle'
 delimiter = '-'
+sleep_sec=1
 
 # THE END
