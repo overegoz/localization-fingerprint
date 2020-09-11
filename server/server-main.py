@@ -1,18 +1,20 @@
 import os, sys, pickle
 import socket
 import numpy as np
+from server_utils import find_closest_cell_blocks
 
 PRINT_DEBUG=True
 
 class myQueue:
     _qsize = 5
     _list = []
-    def __init__(self, qsize=5)
-        self._qsize = sz
+    def __init__(self, qsize=5):
+        self._qsize = qsize
 
-    def add_value(value):
-        if len(self._list) < self_qsize:
-            self_list.append(value)
+    def add_value(self, value):
+        print('adding...', value)
+        if len(self._list) < self._qsize:
+            self._list.append(value)
         else:
             # 선입선출 큐와 같이 동작하도록 구현했음. 새로운 값을 추가하면 큐의 크기가 _qsize 보다
             # 더 커질 경우, 기존의 리스트에 저장된 값 중에서 가장 오래된 값을 버리고, 
@@ -20,7 +22,7 @@ class myQueue:
             self._list = self._list[1:]
             self._list.append(value)
 
-    def get_median():
+    def get_median(self):
         if len(self._list) > 0:
             return np.median(self._list)
         else:
@@ -72,22 +74,37 @@ if __name__=="__main__":
 
     client_radio_map = []
     for ap in range(num_ap):
-        client_radio_map.append(myQueue())   
-
+        client_radio_map.append(myQueue(5))   
+    print('client_radio_map len: ', len(client_radio_map))
     try:
         while True:
             # 클라이언트로 부터 rss 측정값을 받는다
             msgFromClient = cli_sock.recv(common.BUF_SIZE)
+            msgFromClient = str(msgFromClient.decode("utf-8"))
+            print('msg received from cli :', msgFromClient)
+
+
             # 공백문자를 기준으로 분리해 낸다
             msg_split = msgFromClient.split(common.space_delimiter)
+            for i in range(len(msg_split)):
+                msg_split[i] = msg_split[i].rstrip()  # 끝에있는 개행문자 제거
+
+            print('cli msg split ... done')
             ind = 0  # 분리된 공백문자 리스트에서 인덱스 역할을 할 변수
             while ind < len(msg_split):
+                print('let us get it done with ', msg_split[ind], msg_split[ind+1])
                 mac_addr = msg_split[ind]
+                print('mac addr : ', mac_addr)
                 ap_index = ap_list.index(mac_addr)
+                print('ap index : ', ap_index)
                 rss = int(msg_split[ind+1])
+                print('rss : ', rss, type(rss))
                 ind += 2  # 두개씩 한 쌍이니까, 인덱스도 한번에 두개씩 증가
                 client_radio_map[ap_index].add_value(rss)  # 사용자별 radio map에 저장
+                print('cli radio map update... done')
             
+            print('cli radio map update... done')
+
             # 이제부터 사용자 위치추적 코드
             client_radio_map_median = []
             for ap in range(num_ap):
