@@ -3,8 +3,8 @@ Define some commonly-used values
 
 """
 
-server_ip="1.2.3.4"
-server_port=9999
-
+server_ip = "192.168.0.2"
+server_port = 9999
+BUF_SIZE = 1024
 
 # THE END
