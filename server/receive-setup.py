@@ -1,6 +1,6 @@
 import socket
 import os, sys
-from my_utils import build_radio_map
+from server_utils import build_radio_map
 import pickle
 
 USE_INTERNET_CONN = False
