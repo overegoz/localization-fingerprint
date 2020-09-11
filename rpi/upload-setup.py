@@ -8,8 +8,7 @@ if __name__ == "__main__":
     import common
 
     # RPi 가 측정한 신호세기가 저장한 파일이 들어있는 폴더 전체를 압축
-    dir_name = 'measure-1'
-    tar_compress_cmd = 'tar -cvf ' + common.tar_name + ' ' + dir_name
+    tar_compress_cmd = 'tar -cvf ' + common.tar_name + ' ' + common.dir_name
     os.system(tar_compress_cmd)
     assert os.path.isfile(common.tar_name), "Tar file does not exist!"
 
