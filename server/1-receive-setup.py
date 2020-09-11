@@ -44,14 +44,14 @@ if __name__=="__main__":
     else:  # 클라이언트로 부터 받지 않고, 서버 로컬에 저장된 데이터 사용
         pass
 
-    radio_map, ap_list = build_radio_map(common.dir_name)  # radio map 만들기
+    radio_map, ap_list = build_radio_map(common.dir_name_measurement)  # radio map 만들기
 
-    with open(common.dir_name + '/' + common.radio_map_filename, 'wb') as fp:
+    with open(common.dir_name_outcome + '/' + common.radio_map_filename, 'wb') as fp:
         pickle.dump(radio_map, fp)  # radio map을 저장하기
 
     print('Radio Map... dumped to file:', common.radio_map_filename)
 
-    with open(common.dir_name + '/' + common.ap_name_filename, 'wb') as fp:
+    with open(common.dir_name_outcome + '/' + common.ap_name_filename, 'wb') as fp:
         pickle.dump(ap_list, fp)  # ap list를 저장하기
 
     print('AP List... dumped to file:', common.ap_name_filename)

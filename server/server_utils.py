@@ -141,12 +141,17 @@ def find_closest_cell_blocks(client_radio_map, radio_map, how_many):
     for y in range(max_y+1):
         for x in range(max_x+1):
             coord.append([y,x])
+            print('at y=%d, x=%d' % (y, x))
+            print('cli radio map : ', client_radio_map)
+            print('this_coord_radio_map : ', radio_map[y][x])
             d = round(np.linalg.norm(np.array(client_radio_map) - np.array(radio_map[y][x])))
+            print('dist : ', d)
+
             dist.append(d)
 
     # 결과 저장
     cell_blocks, distances = [], []
-    for iter in range(how_many):
+    for _ in range(how_many):
         min_dist = min(dist)  # 최단거리 값 구하기
         min_dist_index = dist.index(min_dist)  # 최단거리가 어느 인덱스에 저장되어 있는지?
         cell_blocks.append(coord[min_dist_index])  # 해당 인덱스의 좌표값 가져오기
