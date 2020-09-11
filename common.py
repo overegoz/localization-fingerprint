@@ -8,5 +8,6 @@ server_port = 9999
 BUF_SIZE = 1024
 tar_name = 'archieve.tar.gz'
 dir_name = 'measure-1'
+radio_map_filename = 'radio-map-1.pickle'
 
 # THE END
