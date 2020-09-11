@@ -1,6 +1,7 @@
 # Localization by using the fingerprint approach
 
 실행방법
+0. 먼저, common.py 파일을 열어서 서버 ip, 서버 port 번호, 폴더 등등을 설정한다
 
 1. RPi : ./python3 1-client-setup.py x y n 을 각 cell-block에서 실행
   - (x,y) cell-block의 인덱스 (물리적인 실제 좌표 아님)
@@ -13,9 +14,7 @@
   - 수신한 파일을 parsing 해서 radio-map 생성하기
   - 생성한 radio-map을 파일로 dump 하기
 
-3. RPi : ./python3 2-upload-setup.py aaa.bbb.ccc.ddd pppp 실행
-  - aaa.bbb.ccc.ddd : 서버 IP
-  - pppp : 서버 port number
+3. RPi : ./python3 2-upload-setup.py 실행
 
 4. Server : ./python 2-server-main.py 실행 : 실시간 위치 추적 및 디스플레이
   - rrrr : radio-map 파일명을 입력으로 받도록 수정?
