@@ -26,14 +26,14 @@ if __name__ == "__main__":
         assert False, 'Stop : socket connect error'
 
     # 파일 내용 보내기
-    with open(tar_name, 'rb') as fp:
+    with open(common.tar_name, 'rb') as fp:
         while True:
             print('Sending file now...')
-            data_to_send = fp.read(BUF_SIZE)
+            data_to_send = fp.read(common.BUF_SIZE)
             if not data_to_send:
                 break
             else:
-                cli_socket.sendall(chunk_to_send)
+                cli_socket.sendall(data_to_send)
 
     print('Finished...')
     cli_socket.close()
