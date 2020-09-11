@@ -1,5 +1,9 @@
 import os, sys
 import time
+
+"""
+클라이언트/rpi가 실시간으로 자신의 위치를 알기위해 측정한 rss값을 string 형태로 바꾸기 위한 함수이다.
+"""
 def get_msg2send(filename):
     sys.path.append('../')
     import common

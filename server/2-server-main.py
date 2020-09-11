@@ -6,6 +6,11 @@ from server_utils import find_closest_cell_blocks
 PRINT_DEBUG=True
 
 class myQueue:
+    """
+    클라이언트가 실시간 위치측정을 위해서 보내주는 값을 그대로 사용하면, 무선신호의 불안정성 때문에
+    결과 정확도가 떨어질 수 있다. 그래서, 클라이언트가 보내주는 값을 Q에다가 저장하고 (선입선출),
+    Q에 저장된 값 중에서 median 값을 사용하기로 한다.
+    """    
     _qsize = 3
     _list = []
     def __init__(self, qsize=3):
@@ -30,11 +35,15 @@ class myQueue:
         else:
             return 0
 
+"""
+radio-map 이랑 ap-list는 pickle 형태로 저장되어 있는데
+pickle 파일을 불러오기 위해 만든 함수이다.
+"""
 def load_pickle(pickle_filename):
     with open(pickle_filename,'rb') as fp:
         data = pickle.load(fp)
     return data
-    
+
 
 if __name__=="__main__":
     sys.path.append('../')
@@ -43,7 +52,14 @@ if __name__=="__main__":
     # radio map 정보 불러오기
     pickle_filename = common.dir_name_outcome + '/' + common.radio_map_filename
     radio_map = load_pickle(pickle_filename)
-    # shape을 변경해 주자. 그래야 나중에 euc norm 계산할때 문제 안생김
+    """
+    shape을 변경해 주자. 그래야 나중에 euc norm 계산할때 문제 안생김
+    문제가 되었던 부분은,
+    client_radio_map_median=[1,2,3,4]이고, radio_map[y][x]=[[1],[2],[3],[4]] 일때 euc dist 구하니까, 결과가 너무 안좋았다.
+    문제는, 두개의 리스트가 서로 다른 형식이었다는 것이다.
+    radio_map[y][x]를 client_radio_map_median 같은 형식으로 바꿔주기 위한 코드이다.
+    참고로, radio-map 에 접근할때는 [y][x] 로 접근해야 한다. y 값이 먼저온다.
+    """
     for y in range(len(radio_map)):
         for x in range(len(radio_map[0])):
             for ap in range(len(radio_map[0][0])):
@@ -56,7 +72,7 @@ if __name__=="__main__":
     ap_list = load_pickle(pickle_filename)
     print('AP list load...done')
 
-    # 디버깅을 위해서 화면에 출력
+    # 디버깅을 위해서 화면에 출력 : 코드가 안정화 되면, 여기는 삭제하자
     max_y, max_x = len(radio_map)-1, len(radio_map[0])-1
     num_ap = len(radio_map[0][0])
     if PRINT_DEBUG:
@@ -79,7 +95,8 @@ if __name__=="__main__":
     cli_sock, addr = svr_sock.accept()
     print('Got connection from ...', addr)
 
-    client_radio_map = []
+
+    client_radio_map = []  # 클라이언트의 현재상태를 나타내는 radio-map은 매번 새로 만들자
     for ap in range(num_ap):
         client_radio_map.append(myQueue(5))   
     print('client_radio_map len: ', len(client_radio_map))
@@ -100,7 +117,8 @@ if __name__=="__main__":
         #print('cli msg split ... done')
         ind = 0  # 분리된 공백문자 리스트에서 인덱스 역할을 할 변수
 
-        # 이번에 데이터를 수신한 AP를 표시해 두기 위해서 체크용도의 리스트를 만든다
+        # Part 1: 이번에 데이터를 수신한 AP를 표시해 두기 위해서 체크용도의 리스트를 만든다
+        # 아래의 Part 2에서 사용하기 위해서다.
         ap_check_if_received = np.zeros(num_ap)
         while ind < len(msg_split):
             #print('let us get it done with ', msg_split[ind], msg_split[ind+1])
@@ -114,12 +132,12 @@ if __name__=="__main__":
                 ap_check_if_received[ap_index] = 1
             except:
                 # 사전측정 과정에서 탐지하지 못한 ap가 실시간으로 측정중에 탐지될 수 있는데
-                # 이 경우는 그냥 무시하고 지나가야 함
+                # 이 경우는 그냥 무시하고 지나가야 함. 고려대상이 아님
                 pass
 
             ind += 2  # 두개씩 한 쌍이니까, 인덱스도 한번에 두개씩 증가
         
-        # cli가 측정 못한 ap에 대해서는 0 이라는 값을 넣어줘야지
+        # Part 2: cli가 측정 못한 ap에 대해서는 0 이라는 값을 넣어줘야지
         for ap_index in range(num_ap):
             if ap_check_if_received[ap_index] == 0:
                 new_median = client_radio_map[ap_index].add_value(0)  # 사용자별 radio map에 저장
@@ -128,7 +146,7 @@ if __name__=="__main__":
 
         #print('cli radio map update... done')
 
-        # 이제부터 사용자 위치추적 코드
+        # 이제부터 사용자 위치를 추적하는 코드
         client_radio_map_median = []
         for ap in range(num_ap):
             client_radio_map_median.append(client_radio_map[ap].get_median())

@@ -2,6 +2,9 @@ import os, sys
 import glob
 import numpy as np
 
+"""
+클라이언트로 부터 전달받은 rss 측정 데이터를 이용해서 radio-map을 만드는 코드이다.
+"""
 def build_radio_map(dir_name):
     sys.path.append('../')
     import common
@@ -21,9 +24,9 @@ def build_radio_map(dir_name):
             for ap in range(num_ap):
                 radio_map[y][x].append([])
 
-    print('a', os.getcwd())
+    #print('a', os.getcwd())
     os.chdir(dir_name)
-    print('b', os.getcwd())
+    #print('b', os.getcwd())
 
     for fname in glob.glob('*.txt'):
         word_bag = fname.split(common.delimiter)
@@ -56,20 +59,24 @@ def build_radio_map(dir_name):
                 if len(rss_list) > 0:
                     median_value = int(np.median(rss_list))
 
+                # 기존의 리스트 형태의 값을 없애고, median 값으로 대체한다.
                 radio_map[y][x][ap].clear()
                 radio_map[y][x][ap].append(median_value)
 
-    print('c', os.getcwd())
+    #print('c', os.getcwd())
     os.chdir('../')
-    print('d', os.getcwd())
+    #print('d', os.getcwd())
 
     return radio_map, ap_list
 
-# 총 AP의 갯수를 카운트 하고, 각각의 MAC 주소에 인덱스 번호를 할당하자
+"""
+총 AP의 갯수를 카운트 하고, 각각의 MAC 주소에 인덱스 번호를 할당하자
+사실, 직접적으로 인덱스 번호를 할당하지는 않고, 리스트에 들어간 순서를 인덱스로 사용한다.
+"""
 def get_ap_list(dir_name):
-    print('e', os.getcwd())
+    #print('e', os.getcwd())
     os.chdir(dir_name)
-    print('f', os.getcwd())
+    #print('f', os.getcwd())
 
     ap_list = []
 
@@ -95,20 +102,23 @@ def get_ap_list(dir_name):
 
         fp.close()
 
-    print('g', os.getcwd())
+    #print('g', os.getcwd())
     os.chdir('../')
-    print('h', os.getcwd())
+    #print('h', os.getcwd())
 
     return ap_list
 
-# (x,y) 좌표값 중에서 각각 최대값 구하기
+"""
+(x,y) 좌표값 중에서 각각 최대값 구하기
+공간은 (x,y)로 구분 되는데, 이 때 x가 취할 수 있는 최대값과, y가 취할 수 있는 최대값을 찾아내기 위한 코드이다.
+"""
 def get_max_xy(dir_name):
     sys.path.append('../')
     import common
 
-    print('i', os.getcwd())
+    #print('i', os.getcwd())
     os.chdir(dir_name)
-    print('j', os.getcwd())
+    #print('j', os.getcwd())
 
     max_x, max_y = -1, -1
     # 총 AP의 갯수를 카운트 하고, 각각의 MAC 주소에 인덱스 번호를 할당하자
@@ -121,16 +131,20 @@ def get_max_xy(dir_name):
         max_x = max(x, max_x)
         max_y = max(y, max_y)
     
-    print('k', os.getcwd())
+    #print('k', os.getcwd())
     os.chdir('../')
-    print('l', os.getcwd())
+    #print('l', os.getcwd())
 
     assert max_x >= 0
     assert max_y >= 0
 
     return max_x, max_y 
 
-#how_many = 1  # 가장 가까운 셀 블록 몇개를 찾을지?
+"""
+클라이언트의 위치를 추적하는, 가장 중요한 코드이다.
+Euclidean distance를 이용해서, 가장 가까워 보이는 cell-block을 선택한다.
+how_many # 가장 가까운 셀 블록 몇개를 찾을지?
+"""
 def find_closest_cell_blocks(client_radio_map, radio_map, how_many):
     max_y, max_x = len(radio_map)-1, len(radio_map[0])-1
 

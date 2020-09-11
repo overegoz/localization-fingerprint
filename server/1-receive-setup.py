@@ -1,8 +1,20 @@
+"""
+클라이언트/rpi가 radio map 생성(=사전 측정 작업)을 위해서 만들어둔 파일을 서버로 보내주는데
+그때 서버쪽에서 파일을 받고, 그 파일을 이용해서 radio-map이랑 ap-list를 만들기위한 프로그램이다.
+"""
 import socket
 import os, sys
 from server_utils import build_radio_map
 import pickle
 
+"""
+이 값이 True이면 네트워크 연결을 통해서 클라이언트로 부터 파일을 전송 받는다.
+이때 사용하는 클라이언트 코드는 2-upload-setup.py 파일이다.
+
+하지만, 이전에 서버가 받은 파일을 재사용 할 수도 있다. 이 때는 False로 해 두면 된다.
+
+radio-map이랑 ap-list가 저장되는 폴더는 common.dir_name_measurement 이고, 실제값은 common.py 파일 참고
+"""
 USE_INTERNET_CONN = False
 
 if __name__=="__main__":
