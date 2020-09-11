@@ -1,4 +1,7 @@
 # Localization by using the fingerprint approach
+* 참고:
+  * GUI 관련 부분은 구현 안했음
+  * 가장 가까운 cell-block 찾는건 테스트 했는데, 가장 가까운 셀블록을 여러개 찾는건 테스트 못했음
 
 실행방법
 0. 먼저, common.py 파일을 열어서 서버 ip, 서버 port 번호, 폴더 등등을 설정한다
