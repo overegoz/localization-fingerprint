@@ -13,11 +13,11 @@
   - 수신한 파일을 parsing 해서 radio-map 생성하기
   - 생성한 radio-map을 파일로 dump 하기
 
-3. RPi : ./python upload-setup.py aaa.bbb.ccc.ddd pppp 실행
+3. RPi : ./python3 upload-setup.py aaa.bbb.ccc.ddd pppp 실행
   - aaa.bbb.ccc.ddd : 서버 IP
   - pppp : 서버 port number
 
-4. Server : ./python3 server.py rrrr 실행 : 실시간 위치 추적 및 디스플레이
+4. Server : ./python server.py rrrr 실행 : 실시간 위치 추적 및 디스플레이
   - rrrr : radio-map 파일명
 
 5. RPi : ./python3 client.py xxxx 실행: 실시간 위치추적
