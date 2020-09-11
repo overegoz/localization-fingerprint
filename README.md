@@ -17,9 +17,9 @@
   - aaa.bbb.ccc.ddd : 서버 IP
   - pppp : 서버 port number
 
-4. Server : ./python server.py rrrr 실행 : 실시간 위치 추적 및 디스플레이
-  - rrrr : radio-map 파일명
+4. Server : ./python server-main.py 실행 : 실시간 위치 추적 및 디스플레이
+  - rrrr : radio-map 파일명을 입력으로 받도록 수정?
 
-5. RPi : ./python3 client.py xxxx 실행: 실시간 위치추적
-  - xxxx : 사용자 ID
+5. RPi : ./python3 client-main.py 실행: 실시간 위치추적
+  - xxxx : 사용자 ID를 입력으로 받도록 수정?
 
