@@ -1,7 +1,8 @@
-import os, sys, pickle
+import os, sys
 import socket
 import numpy as np
 from server_utils import find_closest_cell_blocks
+from server_utils import load_pickle
 
 PRINT_DEBUG=True
 
@@ -34,15 +35,6 @@ class myQueue:
             return np.median(self._list)
         else:
             return 0
-
-"""
-radio-map 이랑 ap-list는 pickle 형태로 저장되어 있는데
-pickle 파일을 불러오기 위해 만든 함수이다.
-"""
-def load_pickle(pickle_filename):
-    with open(pickle_filename,'rb') as fp:
-        data = pickle.load(fp)
-    return data
 
 
 if __name__=="__main__":

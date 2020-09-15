@@ -1,6 +1,7 @@
 import os, sys
 import glob
 import numpy as np
+import pickle
 
 """
 클라이언트로 부터 전달받은 rss 측정 데이터를 이용해서 radio-map을 만드는 코드이다.
@@ -174,3 +175,13 @@ def find_closest_cell_blocks(client_radio_map, radio_map, how_many):
         dist[min_dist_index] = sys.maxsize  
 
     return cell_blocks, distances
+	
+
+"""
+radio-map 이랑 ap-list는 pickle 형태로 저장되어 있는데
+pickle 파일을 불러오기 위해 만든 함수이다.
+"""
+def load_pickle(pickle_filename):
+    with open(pickle_filename,'rb') as fp:
+        data = pickle.load(fp)
+    return data	
