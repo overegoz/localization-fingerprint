@@ -11,7 +11,11 @@
     * 공학관 1층에서 테스트 해 보기 (GUI에서 클라이언트 위치를 표시하는 것까지 하지 말고, 일단은 가장 가까운 cell-block의 좌표가 정확하게 출력되는지를 점검하기)
 
 실행방법
-0. 먼저, common.py 파일을 열어서 서버 ip, 서버 port 번호, 폴더 등등을 설정한다
+
+0. 먼저할일...
+  - common.py 파일을 열어서 서버 ip, 서버 port 번호, 폴더 등등을 설정한다
+  - rpi 폴더에서 measure-1 폴더 내부의 모든 파일을 삭제하고, measure-realtime-1 폴더 내부의 모든 파일을 삭제
+  - server 폴더에서 measure-1 폴더 내부의 모든 파일을 삭제하고, measure-outcome-1 폴더 내부의 모든 파일을 삭제
 
 1. RPi : ./python3 1-client-setup.py x y n 을 각 cell-block에서 실행
   - (x,y) cell-block의 인덱스 (물리적인 실제 좌표 아님)
