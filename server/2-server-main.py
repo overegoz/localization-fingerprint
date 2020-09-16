@@ -4,7 +4,7 @@ import numpy as np
 from server_utils import find_closest_cell_blocks
 from server_utils import load_pickle
 
-PRINT_DEBUG=True
+PRINT_DEBUG=False
 
 class myQueue:
     """
@@ -18,7 +18,9 @@ class myQueue:
         self._qsize = qsize
 
     def add_value(self, value):
-        print('adding...', value)
+        if PRINT_DEBUG:
+            print('adding...', value)
+            
         if len(self._list) < self._qsize:
             self._list.append(value)
         else:
@@ -90,7 +92,7 @@ if __name__=="__main__":
 
     client_radio_map = []  # 클라이언트의 현재상태를 나타내는 radio-map은 매번 새로 만들자
     for ap in range(num_ap):
-        client_radio_map.append(myQueue(5))   
+        client_radio_map.append(myQueue(3))   
     print('client_radio_map len: ', len(client_radio_map))
 
     #try:
@@ -98,7 +100,8 @@ if __name__=="__main__":
         # 클라이언트로 부터 rss 측정값을 받는다
         msgFromClient = cli_sock.recv(common.BUF_SIZE)
         msgFromClient = str(msgFromClient.decode("utf-8"))
-        print('msg received from cli :', msgFromClient)
+        if PRINT_DEBUG:
+            print('msg received from cli :', msgFromClient)
 
 
         # 공백문자를 기준으로 분리해 낸다
@@ -136,14 +139,16 @@ if __name__=="__main__":
                 #print('New median for ap(%d) : %d' % (ap_index, new_median))
                 ap_check_if_received[ap_index] = 1
 
-        #print('cli radio map update... done')
+        if PRINT_DEBUG:
+            print('cli radio map update... done')
 
         # 이제부터 사용자 위치를 추적하는 코드
         client_radio_map_median = []
         for ap in range(num_ap):
             client_radio_map_median.append(client_radio_map[ap].get_median())
 
-        print('cli radio map update...', client_radio_map_median)
+        if PRINT_DEBUG:
+            print('cli radio map update...', client_radio_map_median)
 
         how_many = 1  # 가장 가까운 셀 블록 몇개를 찾을지?
         cell_blocks, distances = \

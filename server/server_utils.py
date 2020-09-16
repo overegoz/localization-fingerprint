@@ -3,6 +3,8 @@ import glob
 import numpy as np
 import pickle
 
+PRINT_DEBUG=False
+
 """
 클라이언트로 부터 전달받은 rss 측정 데이터를 이용해서 radio-map을 만드는 코드이다.
 """
@@ -25,9 +27,7 @@ def build_radio_map(dir_name):
             for ap in range(num_ap):
                 radio_map[y][x].append([])
 
-    #print('a', os.getcwd())
     os.chdir(dir_name)
-    #print('b', os.getcwd())
 
     for fname in glob.glob('*.txt'):
         word_bag = fname.split(common.delimiter)
@@ -64,9 +64,7 @@ def build_radio_map(dir_name):
                 radio_map[y][x][ap].clear()
                 radio_map[y][x][ap].append(median_value)
 
-    #print('c', os.getcwd())
     os.chdir('../')
-    #print('d', os.getcwd())
 
     return radio_map, ap_list
 
@@ -75,9 +73,8 @@ def build_radio_map(dir_name):
 사실, 직접적으로 인덱스 번호를 할당하지는 않고, 리스트에 들어간 순서를 인덱스로 사용한다.
 """
 def get_ap_list(dir_name):
-    #print('e', os.getcwd())
+
     os.chdir(dir_name)
-    #print('f', os.getcwd())
 
     ap_list = []
 
@@ -103,9 +100,7 @@ def get_ap_list(dir_name):
 
         fp.close()
 
-    #print('g', os.getcwd())
     os.chdir('../')
-    #print('h', os.getcwd())
 
     return ap_list
 
@@ -117,9 +112,7 @@ def get_max_xy(dir_name):
     sys.path.append('../')
     import common
 
-    #print('i', os.getcwd())
     os.chdir(dir_name)
-    #print('j', os.getcwd())
 
     max_x, max_y = -1, -1
     # 총 AP의 갯수를 카운트 하고, 각각의 MAC 주소에 인덱스 번호를 할당하자
@@ -132,9 +125,7 @@ def get_max_xy(dir_name):
         max_x = max(x, max_x)
         max_y = max(y, max_y)
     
-    #print('k', os.getcwd())
     os.chdir('../')
-    #print('l', os.getcwd())
 
     assert max_x >= 0
     assert max_y >= 0
@@ -156,11 +147,15 @@ def find_closest_cell_blocks(client_radio_map, radio_map, how_many):
     for y in range(max_y+1):
         for x in range(max_x+1):
             coord.append([y,x])
-            print('at y=%d, x=%d' % (y, x))
-            print('cli radio map : ', client_radio_map)
-            print('this_coord_radio_map : ', radio_map[y][x])
+            if PRINT_DEBUG:
+                print('at y=%d, x=%d' % (y, x))
+                print('cli radio map : ', client_radio_map)
+                print('this_coord_radio_map : ', radio_map[y][x])
+
             d = round(np.linalg.norm(np.array(client_radio_map) - np.array(radio_map[y][x])))
-            print('dist : ', d)
+            
+            if PRINT_DEBUG:
+                print('dist : ', d)
 
             dist.append(d)
 
