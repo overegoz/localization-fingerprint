@@ -92,7 +92,7 @@ if __name__=="__main__":
 
     client_radio_map = []  # 클라이언트의 현재상태를 나타내는 radio-map은 매번 새로 만들자
     for ap in range(num_ap):
-        client_radio_map.append(myQueue(3))   
+        client_radio_map.append(myQueue(3))  # 더 작은 값을 주면, 위치측정의 반응속도 빨라짐
     print('client_radio_map len: ', len(client_radio_map))
 
     #try:
