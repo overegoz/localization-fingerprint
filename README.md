@@ -11,7 +11,14 @@
   * 테스트 환경
     * server : desktop pc
     * client : RPi v4b
-    * 공학관 1층에서 테스트 해 보기 (GUI에서 클라이언트 위치를 표시하는 것까지 하지 말고, 일단은 가장 가까운 cell-block의 좌표가 정확하게 출력되는지를 점검하기)
+    * 공학관 1층 (서측, west)
+
+## TODO
+* map/engr-left 이미지로 테스트 하기 (공학관 1층 서측)
+  * cell-block 별로 현실좌표 계산하기 (선홍)
+  * 지금은 fingerprint 인데, KNN 으로 수정하기 (리나, 현화)
+  * GUI 구현하기 (선홍)
+  * rpi/3-client-main.py 실행할 때, client id를 입력받도록 수정? (고민 중)
 
 ## 실행방법
 
