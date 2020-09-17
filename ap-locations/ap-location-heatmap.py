@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-dir_to_dataset='dataset/set-1'
+#dir_to_dataset='dataset/set-1'
+dir_to_dataset='dataset/set-2'
 ap_name_filename = 'ap-name.pickle'
 radio_map_filename = 'radio-map.pickle'
 
@@ -21,6 +22,7 @@ if __name__=="__main__"    :
     print('Loading *.pickle files...')
     ap_name = load_pickle(dir_to_dataset + '/' + ap_name_filename)
     radio_map = load_pickle(dir_to_dataset + '/' + radio_map_filename)
+    print('=> done')
 
     ap_num = len(ap_name)  # ap의 갯수
 
@@ -36,7 +38,7 @@ if __name__=="__main__"    :
         for i in range(ap_num):
             print(i, ':', ap_name[i])
     
-    msg = 'Select AP # (from 0 to ' + str(ap_num-1) + ', or -1 to quit) : '
+    msg = '\n * Select AP # (from 0 to ' + str(ap_num-1) + ', or -1 to quit) : '
 
     while True:
         selected_ap_id = int(input(msg))
@@ -44,11 +46,11 @@ if __name__=="__main__"    :
             print('Your selection: ', selected_ap_id)
 
         if selected_ap_id < 0:
-            print('Bye~')
+            print('\n * Bye~ (stopping the program)\n')
             break;
 
         if selected_ap_id >= ap_num:
-            print('Invalid AP number...')
+            print('Invalid AP number... Try again!')
             continue
 
         # 사용자가 선택한 AP의 rss 값을 radio map 에서 읽어와서 2차원 배열에 저장
