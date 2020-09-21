@@ -33,3 +33,4 @@
   2.3. 최소의 RSS dist (euc dist)를 가지는 cell-block을 N개 고르고, 가중치를 고려하여 사용자의 위치를 예측
   
 ![WKNN-algo](./WKNN.png)
+* Ref.: M. Li et al., "BLE Fingerprint Indoor Localization Algorithm Based on Eight-Neighborhood Template Matching," Sensors 2019, 19(22), 4859; https://doi.org/10.3390/s19224859
