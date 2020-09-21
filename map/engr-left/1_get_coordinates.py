@@ -5,11 +5,14 @@ floormap을 보고 실제 좌표를 알아내는 일이 귀찮은 일이다.
 이 프로그램을 이용해서 원하는 cell-block의 실제 좌표를 알아내고, 그 값을 engr-left-coord.py 파일에 입력하기
 
 png 확장자를 가진 이미지 파일만 지원되는 것 같다...
+
+어떤 map 이미지를 불러올지를 하드코딩 해 넣지 않고, 파일 선택을 위한 윈도우를 실행하고, 거기서 원하는 이미지 파일을 선택한다.
 """
 
 from tkinter import *
 from tkinter.filedialog import *
 
+# 아래의 설정값은 map에 따라서 달라지는 값이다. 
 AREA_WIDTH_REAL = 6300 + 4300 + 10800 + 4500
 AREA_HEIGHT_REAL = 5800 + 8000 + 9000
 IMAGE_WIDTH = -1
@@ -53,7 +56,7 @@ if __name__ == "__main__":
     yscroll.config(command=canvas.yview)
     frame.pack(fill=BOTH,expand=1)
 
-    #adding the image
+    # 불러올 이미지를 선택하기 위해, 파일 선택을 위한 윈도우를 오픈
     filename = askopenfilename(parent=root, initialdir="./",title='Choose a PNG image.')
     img = PhotoImage(file = filename)
     IMAGE_WIDTH = img.width()
