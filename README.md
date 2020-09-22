@@ -15,9 +15,9 @@
 
 ## TODO
 * map/engr-left 이미지로 테스트 하기 (공학관 1층 서측)
-  * cell-block 별로 현실좌표 계산하기 (선홍)
   * 지금은 fingerprint 인데, KNN 으로 수정하기 (리나, 현화)
-  * GUI 구현하기 (선홍)
+  * cell-block 별로 현실좌표 계산하기 (선홍) ==> 완료.
+  * GUI 구현하기 (선홍) ==> 완료. 서버쪽 코드에 합치기..
   * rpi/3-client-main.py 실행할 때, client id를 입력받도록 수정? (고민 중)
 
 ## 실행방법
