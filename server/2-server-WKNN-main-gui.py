@@ -18,7 +18,7 @@ import time
 if __name__=="__main__":
 
     su.set_how_many(3)
-    su.disable_weighted_knn()
+    su.enable_weighted_knn()
 
     q = Queue()
 

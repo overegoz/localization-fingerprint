@@ -20,6 +20,7 @@ how_many = 1
 # 위치 계산을 할 때, weight 를 고려할 것인지?
 # 기본값은 false
 weighted_knn = False 
+eps = 1  # distance = 0인 경우에는 매우 작은 숫자(eps)를 넣어서 division by 0 예방
 
 """
 공학관 서측(유봉여고쪽) 공간을 사용하는 경우
@@ -74,11 +75,11 @@ def enable_weighted_knn():
 
 def disable_weighted_knn():
     global weighted_knn
-    weighted_knn = True    
+    weighted_knn = False    
 
 # cell_blocks 값을 받으면 현실 가로,세로 위치를 출력 해주는 함수
 def get_real_location_xy(cell_blocks, distances, how_many, weighted_knn):
-    global how_many, real_location_y_list, real_location_x_list
+    global real_location_y_list, real_location_x_list, eps
 
     if how_many == 1: # 가장 가까운 셀 블록을 한개만 찾는 경우...
         #cell_blocks이 가르키는 x좌표,y좌표의 현실위치를 배열에서 찾아 저장 
@@ -99,7 +100,9 @@ def get_real_location_xy(cell_blocks, distances, how_many, weighted_knn):
         for i in range(how_many):
             ys.append(real_location_y_list[cell_blocks[i][0]])
             xs.append(real_location_x_list[cell_blocks[i][1]])
-            weights.append(1/distances[i])
+            assert distances[i] >= 0
+            if distances[i] > 0: weights.append(1/distances[i])
+            else: weights.append(1/eps)  # distance=0인 경우에는 매우 작은 숫자(eps)를 넣어서 division by 0 예방
         real_location_y, real_location_x = 0, 0
         sum_weights = sum(weights)
         for i in range(how_many):
