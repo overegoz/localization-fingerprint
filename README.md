@@ -16,8 +16,6 @@
 ## TODO
 * map/engr-left 이미지로 테스트 하기 (공학관 1층 서측)
   * 지금은 fingerprint 인데, KNN 으로 수정하기 (리나, 현화)
-  * cell-block 별로 현실좌표 계산하기 (선홍) ==> 완료.
-  * GUI 구현하기 (선홍) ==> 완료. 서버쪽 코드에 합치기..
   * rpi/3-client-main.py 실행할 때, client id를 입력받도록 수정? (고민 중)
 
 ## 실행방법
@@ -48,6 +46,7 @@
 
 4. Server : ./python 2-server-main.py 실행 : 실시간 위치 추적 및 디스플레이
   - 실시간 위치 추적 결과를 (y,x) 형태로 출력함. 주의 : y 좌표 면저 출력하고, 다음으로 x 좌표를 출력함
+  - gui에서 출력하려면 2-server-main-gui.py 실행
 
 5. RPi : ./python3 3-client-main.py 실행: 실시간 위치추적
   - 서버 2번 코드를 먼저 실행하고, 다음으로 이 코드를 실행해야 함

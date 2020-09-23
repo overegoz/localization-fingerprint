@@ -3,7 +3,75 @@ import glob
 import numpy as np
 import pickle
 
-PRINT_DEBUG=False
+# 이선홍이 작성한 서버 gui 코드를 위한 import
+import pickle, math
+from tkinter import *
+from PIL import Image,ImageTk
+import threading
+from queue import Queue
+import time
+
+
+PRINT_DEBUG = False
+DEFAULT_USER_ID = "hallym"
+how_many = 1  # 위치측정 할 때, 가장 가까운 cell-block을 몇개 찾을 지를 설정하는 변수
+
+
+"""
+공학관 서측(유봉여고쪽) 공간을 사용하는 경우
+"""
+#MAP_IMAGE_FILENALE = "EngrBldg1stFloor.png"
+MAP_IMAGE_FILENALE = "../map/engr-left/img/engr-left.png"
+real_width = 159550 #현실 가로 길이
+real_height = 44200 #현실 세로 길이
+real_location_x_list = [3850,10930,19384,26715]  #현실 가로 축 모임
+real_location_y_list = [8631,13840,18590,22194,26842]  #현실 세로 축 모임
+
+
+class myQueue:
+    """
+    클라이언트가 실시간 위치측정을 위해서 보내주는 값을 그대로 사용하면, 무선신호의 불안정성 때문에
+    결과 정확도가 떨어질 수 있다. 그래서, 클라이언트가 보내주는 값을 Q에다가 저장하고 (선입선출),
+    Q에 저장된 값 중에서 median 값을 사용하기로 한다.
+    """    
+    _qsize = 3
+    _list = []
+    def __init__(self, qsize=3):
+        self._qsize = qsize
+
+    def add_value(self, value):
+        if PRINT_DEBUG:
+            print('adding...', value)
+            
+        if len(self._list) < self._qsize:
+            self._list.append(value)
+        else:
+            # 선입선출 큐와 같이 동작하도록 구현했음. 새로운 값을 추가하면 큐의 크기가 _qsize 보다
+            # 더 커질 경우, 기존의 리스트에 저장된 값 중에서 가장 오래된 값을 버리고, 
+            # 나머지 값들만 취해서 다시 리스트를 만들고, 그 다음에 새로운 값을 추가한다.
+            self._list = self._list[1:]
+            self._list.append(value)
+
+        return self.get_median()
+
+    def get_median(self):
+        if len(self._list) > 0:
+            return np.median(self._list)
+        else:
+            return 0
+
+
+# cell_blocks 값을 받으면 현실 가로,세로 위치를 출력 해주는 함수
+def get_real_location_xy(cell_blocks):
+    global how_many, real_location_y_list, real_location_x_list
+
+    if how_many == 1: # 가장 가까운 셀 블록을 한개만 찾을시...
+        #cell_blocks이 가르키는 x좌표,y좌표의 현실위치를 배열에서 찾아 저장 
+        real_location_y = real_location_y_list[cell_blocks[0][0]]
+        real_location_x = real_location_x_list[cell_blocks[0][1]]  
+    else: assert False, 'KNN, WKNN 이 아직 구현되지 않았습니다.'
+        
+    return real_location_x, real_location_y
 
 """
 클라이언트로 부터 전달받은 rss 측정 데이터를 이용해서 radio-map을 만드는 코드이다.

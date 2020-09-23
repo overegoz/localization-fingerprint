@@ -1,20 +1,16 @@
 import os, sys
 import socket
 import numpy as np
-from server_utils import find_closest_cell_blocks
-from server_utils import load_pickle
-from server_utils import myQueue
+import server_utils as su
 
-PRINT_DEBUG=False
-
-
-if __name__=="__main__":
+def localization_function(q):
     sys.path.append('../')
     import common
 
     # radio map 정보 불러오기
     pickle_filename = common.dir_name_outcome + '/' + common.radio_map_filename
-    radio_map = load_pickle(pickle_filename)
+    radio_map = su.load_pickle(pickle_filename)
+
     """
     shape을 변경해 주자. 그래야 나중에 euc norm 계산할때 문제 안생김
     문제가 되었던 부분은,
@@ -32,13 +28,13 @@ if __name__=="__main__":
 
     # AP 목록 불러오기
     pickle_filename = common.dir_name_outcome + '/' + common.ap_name_filename
-    ap_list = load_pickle(pickle_filename)
+    ap_list = su.load_pickle(pickle_filename)
     print('AP list load...done')
 
     # 디버깅을 위해서 화면에 출력 : 코드가 안정화 되면, 여기는 삭제하자
     max_y, max_x = len(radio_map)-1, len(radio_map[0])-1
     num_ap = len(radio_map[0][0])
-    if PRINT_DEBUG:
+    if su.PRINT_DEBUG:
         print('Max-Y: %d, Max-X: %d, N_AP: %d' % (max_y, max_x, num_ap))
 
         for y in range(max_y+1):
@@ -60,16 +56,16 @@ if __name__=="__main__":
 
     client_radio_map = []  # 클라이언트의 현재상태를 나타내는 radio-map은 매번 새로 만들자
     for ap in range(num_ap):
-        client_radio_map.append(myQueue(3))  # 더 작은 값을 주면, 위치측정의 반응속도 빨라짐
+        client_radio_map.append(su.myQueue(3))  # 더 작은 값을 주면, 위치측정의 반응속도 빨라짐
     print('client_radio_map len: ', len(client_radio_map))
 
     #try:
     while True:
         # 클라이언트로 부터 rss 측정값을 받는다
         msgFromClient = cli_sock.recv(common.BUF_SIZE)
-        msgFromClient = str(msgFromClient.decode("utf-8"))
-        if PRINT_DEBUG: print('msg received from cli :', msgFromClient)
         if len(msgFromClient) == 0: break;
+        msgFromClient = str(msgFromClient.decode("utf-8"))
+        if su.PRINT_DEBUG: print('msg received from cli :', msgFromClient)
 
         # 공백문자를 기준으로 분리해 낸다
         msg_split = msgFromClient.split(common.space_delimiter)
@@ -106,7 +102,7 @@ if __name__=="__main__":
                 #print('New median for ap(%d) : %d' % (ap_index, new_median))
                 ap_check_if_received[ap_index] = 1
 
-        if PRINT_DEBUG:
+        if su.PRINT_DEBUG:
             print('cli radio map update... done')
 
         # 이제부터 사용자 위치를 추적하는 코드
@@ -114,18 +110,33 @@ if __name__=="__main__":
         for ap in range(num_ap):
             client_radio_map_median.append(client_radio_map[ap].get_median())
 
-        if PRINT_DEBUG: print('cli radio map update...', client_radio_map_median)
+        if su.PRINT_DEBUG: print('cli radio map update...', client_radio_map_median)
 
         how_many = 1  # 가장 가까운 셀 블록 몇개를 찾을지?
         cell_blocks, distances = \
-            find_closest_cell_blocks(client_radio_map_median, radio_map, how_many)
+            su.find_closest_cell_blocks(client_radio_map_median, radio_map, how_many)
 
         #print(cell_blocks, distances)
         print('BEST: cell blocks (y,x) :', cell_blocks)
         print('BEST: distances : ', distances)
 
+        """
+        사용자와 가장 가까운 cell-block을 찾았다. 1개 일 수도 있고, 여러개 일 수도 있다.
+        이 정보를 이용해서, 현실 좌표를 계산하자.
+        """
+        user_real_x, user_real_y = su.get_real_location_xy(cell_blocks)
+        print('User location : %f, %f' % (user_real_x, user_real_y))
+        
+        user_id = su.DEFAULT_USER_ID  #일단 보류
+
+        # queue에다 id, x, y 순서대로 저장
+        # queue를 이용해서 gui 프로그램에게 사용자 위치를 전달한다.
+        q.put(user_id)
+        q.put(user_real_x)
+        q.put(user_real_y)
+
     #except:
     print('Finishing up the server program...')
     cli_sock.close()
     svr_sock.close()
-    print('Bye~')
+    print('Bye~ from the server localization program')
