@@ -112,9 +112,11 @@ def localization_function(q):
 
         if su.PRINT_DEBUG: print('cli radio map update...', client_radio_map_median)
 
-        how_many = 1  # 가장 가까운 셀 블록 몇개를 찾을지?
+        # how_many : 가장 가까운 셀 블록 몇개를 찾을지?
+        # cell_blocks : 가장 가까운 cell-block 들...
+        # distances : 가장 가까운 cell-block 까지의 거리 들...
         cell_blocks, distances = \
-            su.find_closest_cell_blocks(client_radio_map_median, radio_map, how_many)
+            su.find_closest_cell_blocks(client_radio_map_median, radio_map, su.how_many)
 
         #print(cell_blocks, distances)
         print('BEST: cell blocks (y,x) :', cell_blocks)
@@ -124,7 +126,8 @@ def localization_function(q):
         사용자와 가장 가까운 cell-block을 찾았다. 1개 일 수도 있고, 여러개 일 수도 있다.
         이 정보를 이용해서, 현실 좌표를 계산하자.
         """
-        user_real_x, user_real_y = su.get_real_location_xy(cell_blocks)
+        user_real_x, user_real_y = \
+            su.get_real_location_xy(cell_blocks, distances, su.how_many, su.weighted_knn)
         print('User location : %f, %f' % (user_real_x, user_real_y))
         
         user_id = su.DEFAULT_USER_ID  #일단 보류
